@@ -148,13 +148,15 @@
 	if (self.validProduct) {
         // Yes, product is available, so return values.
         
-		[delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
+    if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
+        [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
         
 	} else {
         // No, product is NOT available, so return nil values.
         
-		[delegate requestedProduct:self identifier:nil name:nil price:nil description:nil];
-    }
+    if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
+        [delegate requestedProduct:self identifier:nil name:nil price:nil description:nil];
+  }
 }
 
 
@@ -175,7 +177,8 @@
 				
 				// Return transaction data. App should provide user with purchased product.
                 
-                [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+        if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
+            [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
 				
 				// After customer has successfully received purchased content,
 				// remove the finished transaction from the payment queue.
@@ -188,7 +191,8 @@
 				
 				// Return transaction data. App should provide user with purchased product.
 				
-                [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+        if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
+            [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
                 
 				// After customer has restored purchased content on this device,
 				// remove the finished transaction from the payment queue.
@@ -199,9 +203,10 @@
 				// Purchase was either cancelled by user or an error occurred.
 				
 				if (transaction.error.code != SKErrorPaymentCancelled) {
-					// A transaction error occurred, so notify user.
                     
-                    [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
+            // A transaction error occurred, so notify user.
+            if ([delegate respondsToSelector:@selector(failedPurchase:error:message:)])
+                [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
 				}
 				// Finished transactions should be removed from the payment queue.
 				[[SKPaymentQueue defaultQueue] finishTransaction: transaction];
@@ -233,7 +238,8 @@
         // Release the transaction observer since no prior transactions were found.
         [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
         
-        [delegate incompleteRestore:self];
+        if ([delegate respondsToSelector:@selector(incompleteRestore:)])
+            [delegate incompleteRestore:self];
         
     } else {
         // Queue does contain one or more transactions, so return transaction data.
@@ -245,7 +251,8 @@
 
             NSLog(@"EBPurchase restore queue.transactions - transaction data found");
             
-            [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];            
+            if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
+                [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];            
         }
     }
 }
@@ -257,7 +264,8 @@
 
     NSLog(@"EBPurchase restoreCompletedTransactionsFailedWithError");
 
-    [delegate failedRestore:self error:error.code message:error.localizedDescription];
+    if ([delegate respondsToSelector:@selector(failedRestore:error:message:)])
+        [delegate failedRestore:self error:error.code message:error.localizedDescription];
 }
 
 

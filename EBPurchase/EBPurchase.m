@@ -266,8 +266,6 @@
 - (void)dealloc
 {
     [validProduct release];
-    [delegate release];
-    
     [super dealloc];
 }
 

@@ -148,14 +148,14 @@
 	if (self.validProduct) {
         // Yes, product is available, so return values.
         
-    if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
-        [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
+        if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
+            [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
         
 	} else {
         // No, product is NOT available, so return nil values.
         
-    if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
-        [delegate requestedProduct:self identifier:nil name:nil price:nil description:nil];
+        if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
+            [delegate requestedProduct:self identifier:nil name:nil price:nil description:nil];
   }
 }
 
@@ -176,9 +176,8 @@
 				// Item was successfully purchased!
 				
 				// Return transaction data. App should provide user with purchased product.
-                
-        if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
-            [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+                if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
+                    [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
 				
 				// After customer has successfully received purchased content,
 				// remove the finished transaction from the payment queue.
@@ -190,9 +189,8 @@
 				// Ideal for restoring item across all devices of this customer.
 				
 				// Return transaction data. App should provide user with purchased product.
-				
-        if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
-            [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+                if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
+                    [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
                 
 				// After customer has restored purchased content on this device,
 				// remove the finished transaction from the payment queue.
@@ -204,10 +202,11 @@
 				
 				if (transaction.error.code != SKErrorPaymentCancelled) {
                     
-            // A transaction error occurred, so notify user.
-            if ([delegate respondsToSelector:@selector(failedPurchase:error:message:)])
-                [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
+                    // A transaction error occurred, so notify user.
+                    if ([delegate respondsToSelector:@selector(failedPurchase:error:message:)])
+                        [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
 				}
+                
 				// Finished transactions should be removed from the payment queue.
 				[[SKPaymentQueue defaultQueue] finishTransaction: transaction];
 				break;

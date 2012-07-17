@@ -109,7 +109,7 @@
     }
 }
 
--(void) successfulPurchase:(EBPurchase*)ebp identifier:(NSString*)productId receipt:(NSData*)transactionReceipt 
+-(void) successfulPurchase:(EBPurchase*)ebp restored:(bool)isRestore identifier:(NSString*)productId receipt:(NSData*)transactionReceipt 
 {
     NSLog(@"ViewController successfulPurchase");
     
@@ -134,11 +134,21 @@
 
         // 2 - Notify the user that the transaction was successful.
         
-        UIAlertView *updatedAlert = [[UIAlertView alloc] initWithTitle:@"Thank You!" message:@"Your purhase was successful and the Game Levels Pack is now unlocked for your enjoyment!" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        NSString *alertMessage;
+        
+        if (isRestore) {
+            // This was a Restore request.
+            alertMessage = @"Your purchase was restored and the Game Levels Pack is now unlocked for your enjoyment!";
+            
+        } else {
+            // This was a Purchase request.
+            alertMessage = @"Your purchase was successful and the Game Levels Pack is now unlocked for your enjoyment!";
+        }
+        
+        UIAlertView *updatedAlert = [[UIAlertView alloc] initWithTitle:@"Thank You!" message:alertMessage delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [updatedAlert show];
         [updatedAlert release];
     }
-    
 }
 
 -(void) failedPurchase:(EBPurchase*)ebp error:(NSInteger)errorCode message:(NSString*)errorMessage 

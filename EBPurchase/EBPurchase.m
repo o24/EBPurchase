@@ -176,8 +176,8 @@
 				// Item was successfully purchased!
 				
 				// Return transaction data. App should provide user with purchased product.
-                if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
-                    [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+                if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
+                    [delegate successfulPurchase:self restored:NO identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
 				
 				// After customer has successfully received purchased content,
 				// remove the finished transaction from the payment queue.
@@ -189,8 +189,8 @@
 				// Ideal for restoring item across all devices of this customer.
 				
 				// Return transaction data. App should provide user with purchased product.
-                if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
-                    [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
+                if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
+                    [delegate successfulPurchase:self restored:YES identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];
                 
 				// After customer has restored purchased content on this device,
 				// remove the finished transaction from the payment queue.
@@ -250,8 +250,8 @@
 
             NSLog(@"EBPurchase restore queue.transactions - transaction data found");
             
-            if ([delegate respondsToSelector:@selector(successfulPurchase:identifier:receipt:)])
-                [delegate successfulPurchase:self identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];            
+            if ([delegate respondsToSelector:@selector(successfulPurchase:restored:identifier:receipt:)])
+                [delegate successfulPurchase:self restored:YES identifier:transaction.payment.productIdentifier receipt:transaction.transactionReceipt];            
         }
     }
 }

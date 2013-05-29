@@ -147,9 +147,17 @@
 	}
 	if (self.validProduct) {
         // Yes, product is available, so return values.
-        
+		NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
+		[formatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
+		[formatter setNumberStyle:NSNumberFormatterCurrencyStyle];
+		[formatter setLocale:[self.validProduct priceLocale]];
+		
+		NSString* priceString = [formatter stringFromNumber:[self.validProduct price]];
+		LOG("priceString:%@", priceString);
+		
         if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
-            [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
+            [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:priceString description:self.validProduct.localizedDescription];
+            //[delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:[self.validProduct.price stringValue] description:self.validProduct.localizedDescription];
         
 	} else {
         // No, product is NOT available, so return nil values.

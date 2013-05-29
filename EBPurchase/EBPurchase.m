@@ -153,7 +153,6 @@
 		[formatter setLocale:[self.validProduct priceLocale]];
 		
 		NSString* priceString = [formatter stringFromNumber:[self.validProduct price]];
-		LOG("priceString:%@", priceString);
 		
         if ([delegate respondsToSelector:@selector(requestedProduct:identifier:name:price:description:)])
             [delegate requestedProduct:self identifier:self.validProduct.productIdentifier name:self.validProduct.localizedTitle price:priceString description:self.validProduct.localizedDescription];
@@ -207,13 +206,16 @@
 				
 			case SKPaymentTransactionStateFailed:
 				// Purchase was either cancelled by user or an error occurred.
+                [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
 				
+                /*
 				if (transaction.error.code != SKErrorPaymentCancelled) {
                     
                     // A transaction error occurred, so notify user.
                     if ([delegate respondsToSelector:@selector(failedPurchase:error:message:)])
                         [delegate failedPurchase:self error:transaction.error.code message:transaction.error.localizedDescription];
 				}
+                 */
                 
 				// Finished transactions should be removed from the payment queue.
 				[[SKPaymentQueue defaultQueue] finishTransaction: transaction];
